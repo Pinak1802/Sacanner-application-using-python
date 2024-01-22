@@ -1,0 +1,51 @@
+import numpy as np
+from PIL import Image
+import cv2
+url='http://192.168.1.90:8080/shot.jpg'
+while True:
+	img=request.urlopen(url)
+	img_bytes=bytearray(img.read())
+	img_np=np.array(img_bytes,dtype=np.unit8)
+	frame=cv2.imdecode(img_np,-1)
+	frame_cvt=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+	frame_blur=cv2.cv2.GaussianBlur(frame_cvt,(5,5),0)
+	frame_edge=cv2.Canny(frame_blur,30,50)
+	contours,h=cv2.findContours(frame_edge,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+	if contours:
+		max_contours=max(contours,key=cv2.contourArea)
+		x,y,w,h=cv2.boundingRect(max_contour)
+		if cv2.contoursArea(max_contour)>5000:
+			cv2.rectangle(frame,(x,y),(x+y,y+h),(0,255,255),2)
+			object_only=frame[y:y+h,x:x+w]
+		cv2.imshow('My Scanner',object_only)
+		if cv2.waitkey(1)==ord('s'):
+			img_pil=Image.fromarray(object_only)
+			time_str=time.strftime('%Y-%m-%d-%H-%M-%S')
+			img_pil.save(f'{time_str}.prf')
+			print('saved')
+
+
+
+
+
+FindContours detects change in the image color and marks it as contour.
+
+PILLOW:ou can do image resizing, rotation and transformation. 
+Pillow module allows you to pull some statistics data out of image using histogram method, 
+which later can be used for statistical analysis and automatic contrast enhancement.
+
+OPEN-CV: By using it, one can process images and videos to identify objects, 
+faces, or even handwriting of a human.
+OpenCV is a Python library that allows you to perform image processing and computer vision tasks. 
+It provides a wide range of features, including object detection, face recognition, and tracking
+
+
+
+
+
+
+
+
+
+
+0
